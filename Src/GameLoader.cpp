@@ -587,7 +587,7 @@ void GameLoader::IdentifyGamesInZipArchive(
       Region::ptr_t region = v2.second;
       if (!region->required)
         continue;
-      for (auto file: region->files)
+      for (const auto &file: region->files)
       {
         // Add each file to the set of required files per game
         files_required_by_game[game_name].insert(file);
@@ -757,7 +757,7 @@ bool GameLoader::ComputeRegionSize(uint32_t *region_size, const GameLoader::Regi
   // use maximum end_addr = offset + stride * (num_chunks - 1) + chunk_size.
   std::vector<uint32_t> end_addr;
   bool error = false;
-  for (auto file: region->files)
+  for (const auto &file: region->files)
   {
     const ZippedFile *zipped_file = LookupFile(file, zip);
     if (zipped_file)

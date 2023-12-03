@@ -40,7 +40,7 @@ std::shared_ptr<CLogger> GetLogger()
 
 void SetLogger(std::shared_ptr<CLogger> logger)
 {
-  s_Logger = logger;
+  s_Logger = std::move(logger);
 }
 
 void DebugLog(const char *fmt, ...)
@@ -118,7 +118,7 @@ std::shared_ptr<CLogger> CreateLogger(const Util::Config::Node &config)
   std::set<std::string> supportedDestinations { "stdout", "stderr", "syslog" };
   std::set<std::string> destinations; // log output destinations
   std::set<std::string> filenames;    // anything that is not a known destination is assumed to be a file
-  for (auto output: outputs)
+  for (const auto &output: outputs)
   {
     // Is this a known destination or a file?
     std::string canonicalizedOutput = Util::TrimWhiteSpace(Util::ToLower(output));
@@ -189,7 +189,7 @@ void CMultiLogger::ErrorLog(const char *fmt, va_list vl)
 }
 
 CMultiLogger::CMultiLogger(std::vector<std::shared_ptr<CLogger>> loggers)
-  : m_loggers(loggers)
+  : m_loggers(std::move(loggers))
 {
 }
 
@@ -286,7 +286,7 @@ void CFileLogger::ReopenFiles(std::ios_base::openmode mode)
   m_logFiles.clear();
 
   // (Re-)Open
-  for (auto filename: m_logFilenames)
+  for (const auto &filename: m_logFilenames)
   {
     std::ofstream ofs(filename.c_str(), mode);
     if (ofs.is_open() && ofs.good())
@@ -311,15 +311,15 @@ void CFileLogger::WriteToFiles(const char *str)
 
 CFileLogger::CFileLogger(CLogger::LogLevel level, std::vector<std::string> filenames)
   : m_logLevel(level),
-    m_logFilenames(filenames)
+    m_logFilenames(std::move(filenames))
 {
   ReopenFiles(std::ios::out);
 }
 
 CFileLogger::CFileLogger(CLogger::LogLevel level, std::vector<std::string> filenames, std::vector<FILE *> systemFiles)
   : m_logLevel(level),
-    m_logFilenames(filenames),
-    m_systemFiles(systemFiles)
+    m_logFilenames(std::move(filenames)),
+    m_systemFiles(std::move(systemFiles))
 {
   ReopenFiles(std::ios::out);
 }

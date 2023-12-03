@@ -147,7 +147,7 @@ void CCrypto::Init(uint32_t encryptionKey, std::function<uint16_t(uint32_t)> Rea
   line_buffer = std::unique_ptr<UINT8[]>{ new UINT8[LINE_SIZE] };
   line_buffer_prev = std::unique_ptr<UINT8[]>{ new UINT8[LINE_SIZE] };
 
-  m_read = ReadRAMCallback;
+  m_read = std::move(ReadRAMCallback);
 	//m_read.bind_relative_to(*owner());
 
 /*

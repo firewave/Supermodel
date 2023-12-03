@@ -30,7 +30,7 @@
 namespace FileSystemPath
 {
     // Checks if a directory exists (returns true if exists, false if it doesn't)
-    bool PathExists(std::string fileSystemPath)
+    bool PathExists(const std::string &fileSystemPath)
     {
         bool pathExists = false;
         struct stat pathInfo;

@@ -52,7 +52,7 @@ namespace Util
         friend class const_iterator;
       public:
         inline iterator(ptr_t node = ptr_t())
-          : m_node(node)
+          : m_node(std::move(node))
         {}
         inline iterator(const iterator &it)
           : m_node(it.m_node)
@@ -97,9 +97,9 @@ namespace Util
 		  : m_node(const_ptr_t())
         {}
         inline const_iterator(const_ptr_t node)
-          : m_node(node)
+          : m_node(std::move(node))
         {}
-        inline const_iterator(ptr_t node)
+        inline const_iterator(const ptr_t &node)
           : m_node(std::const_pointer_cast<const Node>(node))
         {}
         inline const_iterator(const const_iterator &it)
